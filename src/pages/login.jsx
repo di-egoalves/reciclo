@@ -50,7 +50,6 @@ function Login() {
                         // decodifica o token armazenado
                         const decodedToken = jwtDecode(access_token);
                         const roleNames = decodedToken.roleNames
-                        console.log (decodedToken)
 
                         toast.success("Login realizado com sucesso.", {
                             position: "bottom-right",
@@ -102,10 +101,10 @@ function Login() {
                                 <FormLabel>Email</FormLabel>
                                 <div className="input-group mb-3">
                                     <div className='input-group-text btn-orange'>
-                                        <BsFillEnvelopeFill />
+                                        <BsFillEnvelopeFill/>
                                     </div>
                                     <FormControl
-                                        className="form-control custom-focus"
+                                        className="form-control custom-focus m-0"
                                         type='email'
                                         placeholder='Digite seu email'
                                         value={email}
@@ -122,7 +121,7 @@ function Login() {
                                     </div>
                                     <FormControl
                                         type={showPassword ? 'text' : 'password'}
-                                        className="form-control custom-focus"
+                                        className="form-control custom-focus m-0"
                                         placeholder="Digite sua senha"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
