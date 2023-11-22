@@ -510,7 +510,7 @@ function EditarCatador(props) {
 
 
 
-function ListarCatadores() {
+function ListarTodosCatadores() {
     const [catadorData, setCatadorData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [catadorSelecionadoId, setCatadorSelecionadoId] = useState(null); // Adicionando estado para o ID do catador selecionado
@@ -624,7 +624,7 @@ function ListarCatadores() {
 
     useEffect(() => {
         // Fazendo a chamada para o backend para obter os dados do catador
-        axios.get('http://18.219.127.240:3000/api/v1/catadores/pega-catadores/associacao', config)
+        axios.get('http://18.219.127.240:3000/api/v1/catadores', config)
             .then(response => {
                 setCatadorData(response.data);
 
@@ -651,7 +651,7 @@ function ListarCatadores() {
     };
 
     // Definimos a quantidade de resultados por página
-    const resultsPerPage = 2;
+    const resultsPerPage = 5;
 
     // Filtramos os resultados da página atual
     const currentResults = catadorData ? paginateResults(catadorData, currentPage, resultsPerPage) : [];
@@ -767,4 +767,4 @@ function ListarCatadores() {
     );
 }
 
-export default ListarCatadores;
+export default ListarTodosCatadores;

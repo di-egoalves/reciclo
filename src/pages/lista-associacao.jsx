@@ -1,4 +1,4 @@
-import { Badge, Button, Col, Container, FormControl, InputGroup, ListGroup, Pagination, Row, Modal, Form, FormLabel, Dropdown } from 'react-bootstrap';
+ import { Badge, Button, Col, Container, FormControl, InputGroup, ListGroup, Pagination, Row, Modal, Form, FormLabel, Dropdown } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
 import { BsFilePlus, BsPen, BsPeopleFill, BsPlusCircleFill, BsSearch, BsTrash } from 'react-icons/bs';
 import '../style/css.css';
@@ -12,8 +12,8 @@ import { toast } from "react-hot-toast";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-const AdicionarCatador = (props) => {
-    const [cpf, setCpf] = useState('');
+const AdicionarAssociacao = (props) => {
+    const [cnpj, setCnpj] = useState('');
     const [telefone, setTelefone] = useState('');
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
@@ -40,78 +40,55 @@ const AdicionarCatador = (props) => {
             }
         };
 
-        fetchData('http://18.219.127.240:3000/api/v1/associacoes', setAssociacoes);
-        fetchData('http://18.219.127.240:3000/api/v1/etnia', setEtnias);
-        fetchData('http://18.219.127.240:3000/api/v1/genero', setGeneros);
+   
     }, []);
 
-    const handleAssociacaoChange = (event) => {
-        const associacao = associacoes.find(a => a.user.name === event.target.innerText);
-        setSelectedAssociacao(associacao ? associacao.id : '');
-        setVisualSelectedAssociacao(associacao ? associacao.user.name : '');
-    };
-
-    const handleEtniaChange = (event) => {
-        const etnia = etnias.find(e => e.nomenclatura === event.target.innerText);
-        setSelectedEtnia(etnia ? etnia.id : '');
-        setVisualSelectedEtnia(etnia ? etnia.nomenclatura : '');
-    };
-
-    const handleGeneroChange = (event) => {
-        const genero = generos.find(g => g.nomenclatura === event.target.innerText);
-        setSelectedGenero(genero ? genero.id : '');
-        setVisualSelectedGenero(genero ? genero.nomenclatura : '');
-    };
-
+  
     const handleSubmit = () => {
         const dataToSend = {
-            cpf: cpf,
+           
             user: {
                 name: nome,
                 email: email,
                 phone: telefone,
-                status: true,
+                status: true
             },
+            cnpj: cnpj,
             bairro: bairro,
             endereco: endereco,
-            idAssociacao: selectedAssociacao,
-            idEtnia: selectedEtnia,
-            idGenero: selectedGenero,
+          
         };
         console.log(dataToSend)
 
-        axios.post('http://18.219.127.240:3000/api/v1/catadores', dataToSend)
+        axios.post('http://18.219.127.240:3000/api/v1/associacoes', dataToSend)
             .then(response => {
 
 
                 if (response && response.data) {
-                    console.log('Catador criado com sucesso:', response.data);
+                    console.log('Associacao criado com sucesso:', response.data);
                     setNome('');
                     setEmail('');
                     setPassword('');
-                    setCpf('');
+                    setCnpj('');
                     setTelefone('');
                     setBairro('');
                     setEndereco('');
-                    setSelectedAssociacao('');
-                    setSelectedEtnia('');
-                    setSelectedGenero('');
-                    toast.success('Catador criado com sucesso!');
+                    toast.success('Associacao criado com sucesso!');
                     props.onHide();
                     window.location.reload()
                 } else {
-                    console.error('Resposta inválida ao criar catador:', response);
-                    toast.error('Erro ao criar catador. Resposta inválida do servidor.',);
+                    console.error('Resposta inválida ao criar associacao:', response);
+                    toast.error('Erro ao criar associacao. Resposta inválida do servidor.',);
                 }
             })
 
             .catch(error => {
-                console.error('Erro ao criar catador:', error.response.data);
+                console.error('Erro ao criar associacao:', error.response.data);
                 const errorMessage = error.response.data && error.response.data.message
                     ? error.response.data.message
-                    : 'Erro desconhecido ao criar catador.';
+                    : 'Erro desconhecido ao criar associacao.';
 
-                toast.error(`Erro ao criar catador: ${errorMessage}`);
+                toast.error(`Erro ao criar associacao: ${errorMessage}`);
 
             });
 
@@ -142,13 +119,13 @@ const AdicionarCatador = (props) => {
                     />
 
                     <Form.Label className='text-orange'>
-                        CPF
+                        CNPJ
                     </Form.Label>
                     <InputMask
                         className="form-control custom-focus"
-                        mask="999.999.999-99"
-                        value={cpf}
-                        onChange={(e) => setCpf(e.target.value)}
+                        mask="99.999.999/0009-99"
+                        value={cnpj}
+                        onChange={(e) => setCnpj(e.target.value)}
                     />
 
                     <Form.Label className='text-orange'>
@@ -170,7 +147,6 @@ const AdicionarCatador = (props) => {
                         value={telefone}
                         onChange={(e) => setTelefone(e.target.value)}
                     />
-
                     <Form.Label className='text-orange'>
                         Bairro
                     </Form.Label>
@@ -190,54 +166,6 @@ const AdicionarCatador = (props) => {
                         value={endereco}
                         onChange={(e) => setEndereco(e.target.value)}
                     />
-
-                    <Form.Label className='text-orange'>
-                        Associação
-                    </Form.Label>
-                    <Dropdown className='w-100'>
-                        <Dropdown.Toggle className='w-100 outline-white' id="dropdown-basic">
-                            {visualSelectedAssociacao || 'Selecione uma Associação'}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu className='w-100'>
-                            {associacoes.map((associacao, index) => (
-                                <Dropdown.Item key={index} onClick={handleAssociacaoChange}>
-                                    {associacao.user.name}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
-
-                    <Form.Label className='text-orange'>
-                        Etnia
-                    </Form.Label>
-                    <Dropdown className='w-100'>
-                        <Dropdown.Toggle className='w-100 outline-white' id="dropdown-basic">
-                            {visualSelectedEtnia || 'Selecione uma Etnia'}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu className='w-100'>
-                            {etnias.map((etnia, index) => (
-                                <Dropdown.Item key={index} onClick={handleEtniaChange}>
-                                    {etnia.nomenclatura}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
-
-                    <Form.Label className='text-orange'>
-                        Gênero
-                    </Form.Label>
-                    <Dropdown className='w-100'>
-                        <Dropdown.Toggle className='w-100 outline-white' id="dropdown-basic">
-                            {visualSelectedGenero || 'Selecione um Gênero'}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu className='w-100'>
-                            {generos.map((genero, index) => (
-                                <Dropdown.Item key={index} onClick={handleGeneroChange}>
-                                    {genero.nomenclatura}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -252,128 +180,80 @@ const AdicionarCatador = (props) => {
 
 
 
-function EditarCatador(props) {
+function EditarAssociacao(props) {
     const [nome, setNome] = useState('');
-    const [cpf, setCpf] = useState('');
+    const [cnpj, setCnpj] = useState('');
     const [email, setEmail] = useState('');
     const [telefone, setTelefone] = useState('');
     const [bairro, setBairro] = useState('');
     const [endereco, setEndereco] = useState('');
-    const [associacoes, setAssociacoes] = useState([]);
-    const [etnias, setEtnias] = useState([]);
-    const [generos, setGeneros] = useState([]);
-    const [selectedAssociacao, setSelectedAssociacao] = useState('');
-    const [selectedEtnia, setSelectedEtnia] = useState('');
-    const [selectedGenero, setSelectedGenero] = useState('');
-    const [visualSelectedGenero, setVisualSelectedGenero] = useState('');
-    const [visualSelectedAssociacao, setVisualSelectedAssociacao] = useState('');
-    const [visualSelectedEtnia, setVisualSelectedEtnia] = useState('');
-    const [selectedAssociacaoCatador, setSelectedAssociacaoCatador] = useState('');
-    const [selectedAssociacaoId, setSelectedAssociacaoId] = useState('');
-    const [selectedAssociacaoName, setSelectedAssociacaoName] = useState('');
-    const [selectedGeneroId, setSelectedGeneroId] = useState('');
-    const [selectedEtniaName, setSelectedEtniaName] = useState('');
-    const [selectedGeneroName, setSelectedGeneroName] = useState('');
-    const [catador, setCatador] = useState(null);
 
-    const [catadorSelecionadoId, setCatadorSelecionadoId] = useState(props.catadorId); // Utilizando o ID do catador passado como prop
+    const [associacao, setAssociacao] = useState(null);
+
+    const [associacaoSelecionadoId, setassociacaoSelecionadoId] = useState(props.associacaoId);
 
     useEffect(() => {
         const fetchData = async (url, setterFunction) => {
             try {
                 const response = await axios.get(url);
                 setterFunction(response.data);
-                const catadorAssociacao = response.data.associacao;
-                const catadorEtnia = response.data.etnia;
-                const catadorGenero = response.data.genero;
 
                 setNome(response.data.user.name);
-                setCpf(response.data.cpf);
+                setCnpj(response.data.cnpj);
                 setEmail(response.data.user.email);
                 setTelefone(response.data.user.phone);
                 setBairro(response.data.bairro);
                 setEndereco(response.data.endereco);
-
-
-                setSelectedAssociacaoId(catadorAssociacao.id);
-                setSelectedAssociacaoName(catadorAssociacao.user.name);
-                setSelectedEtnia(catadorEtnia.id);
-                setSelectedEtniaName(catadorEtnia.nomenclatura);
-
-                setSelectedGenero(catadorGenero.id);
-                setSelectedGeneroName(catadorGenero.nomenclatura);
-
-
-
             } catch (error) {
                 console.error('Erro ao obter dados:', error);
             }
         };
-        fetchData(`http://18.219.127.240:3000/api/v1/catadores/${props.catadorId}`, setCatador);
-        fetchData('http://18.219.127.240:3000/api/v1/associacoes', setAssociacoes);
-        fetchData('http://18.219.127.240:3000/api/v1/etnia', setEtnias);
-        fetchData('http://18.219.127.240:3000/api/v1/genero', setGeneros);
-    }, [props.catadorId]);
+        fetchData(`http://18.219.127.240:3000/api/v1/associacoes/${props.associacaoId}`, setAssociacao);
 
-    const handleAssociacaoChange = (event) => {
-        const associacao = associacoes.find(a => a.user.name === event.target.innerText);
-        setSelectedAssociacaoId(associacao ? associacao.id : '');
-        setSelectedAssociacaoName(associacao ? associacao.user.name : '');
-    };
+    }, [props.associacaoId]);
 
-    const handleEtniaChange = (event) => {
-        const etnia = etnias.find(e => e.nomenclatura === event.target.innerText);
-        setSelectedEtnia(etnia ? etnia.id : '');
-        setSelectedEtniaName(etnia ? etnia.nomenclatura : '');
-    };
-
-    const handleGeneroChange = (event) => {
-        const genero = generos.find(g => g.nomenclatura === event.target.innerText);
-        setSelectedGenero(genero ? genero.id : '');
-        setSelectedGeneroName(genero ? genero.nomenclatura : '');
-    };
+    
     const handleSubmit = () => {
         const dataToSend = {
-            cpf: cpf,
+        
             user: {
                 name: nome,
                 email: email,
                 phone: telefone,
                 status: true,
             },
+            cnpj: cnpj,
             bairro: bairro,
-            endereco: endereco,
-            associacaoId: selectedAssociacaoId,
-            idEtnia: selectedEtnia,
-            idGenero: selectedGenero,
+            endereco: endereco
+
         };
         console.log(dataToSend)
-        console.log(props.catadorId)
-        axios.put(`http://18.219.127.240:3000/api/v1/catadores/${props.catadorId}`, dataToSend)
+        console.log(props.associacaoId)
+        axios.put(`http://18.219.127.240:3000/api/v1/associacoes/${props.associacaoId}`, dataToSend)
             .then(response => {
                 if (response && response.data) {
-                    console.log('Catador atualizado com sucesso:', response.data);
-                    toast.success('Catador atualizado com sucesso');
+                    console.log('Associacao atualizado com sucesso:', response.data);
+                    toast.success('Associacao atualizado com sucesso');
                     props.onHide();
 
-                    setCatador(response.data);
+                    setAssociacao(response.data);
                     window.location.reload();
-                    console.log('Após a atualização do estado catador:', catador);
+                    console.log('Após a atualização do estado associacao:', associacao);
 
 
 
 
                 } else {
-                    console.error('Resposta inválida ao atualizar catador:', response);
+                    console.error('Resposta inválida ao atualizar associacao:', response);
                 }
             })
             .catch(error => {
-                console.error('Erro ao atualizar catador:', error);
+                console.error('Erro ao atualizar associacao:', error);
                 const errorMessage = error.response.data && error.response.data.message
                     ? error.response.data.message
-                    : 'Erro desconhecido ao criar catador.';
+                    : 'Erro desconhecido ao criar associacao.';
 
-                toast.error(`Erro ao criar catador: ${errorMessage}`);
+                toast.error(`Erro ao criar Associacao: ${errorMessage}`);
             });
     };
 
@@ -387,7 +267,7 @@ function EditarCatador(props) {
         >
             <Modal.Header closeButton>
                 <Modal.Title style={{ color: '#EF7A2A' }}>
-                    Editar Catador
+                    Editar Associacao
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -403,13 +283,13 @@ function EditarCatador(props) {
                     />
 
                     <Form.Label className='text-orange'>
-                        CPF
+                        CNPJ
                     </Form.Label>
                     <FormControl
                         className="form-control custom-focus"
                         type='text'
-                        value={cpf}
-                        onChange={(e) => setCpf(e.target.value)}
+                        value={cnpj}
+                        onChange={(e) => setCnpj(e.target.value)}
                     />
 
                     <Form.Label className='text-orange'>
@@ -451,52 +331,7 @@ function EditarCatador(props) {
                         value={endereco}
                         onChange={(e) => setEndereco(e.target.value)}
                     />
-                    <Form.Label className='text-orange'>
-                        Associação
-                    </Form.Label>
-                    <Dropdown className='w-100'>
-                        <Dropdown.Toggle className='w-100 outline-white' id="dropdown-assoc">
-                            {selectedAssociacaoName || 'Selecione uma Associação'}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu className='w-100'>
-                            {associacoes.map((associacao, index) => (
-                                <Dropdown.Item key={index} onClick={handleAssociacaoChange}>
-                                    {associacao.user.name}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
-
-                    <Form.Label className='text-orange'>
-                        Etnia
-                    </Form.Label>
-                    <Dropdown className='w-100'>
-                        <Dropdown.Toggle className='w-100 outline-white' id="dropdown-etnia">
-                            {selectedEtniaName || 'Selecione uma Etnia'}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu className='w-100'>
-                            {etnias.map((etnia, index) => (
-                                <Dropdown.Item key={index} onClick={handleEtniaChange}>
-                                    {etnia.nomenclatura}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    <Form.Label className='text-orange'>
-                        Gênero
-                    </Form.Label>
-                    <Dropdown className='w-100'>
-                        <Dropdown.Toggle className='w-100 outline-white' id="dropdown-basic">
-                            {selectedGeneroName || 'Selecione um Gênero'}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu className='w-100'>
-                            {generos.map((genero, index) => (
-                                <Dropdown.Item key={index} onClick={handleGeneroChange}>
-                                    {genero.nomenclatura}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
+                  
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -510,44 +345,43 @@ function EditarCatador(props) {
 
 
 
-function ListarCatadores() {
-    const [catadorData, setCatadorData] = useState([]);
+function ListarAssociacoes() {
+    const [associacaoData, setAssociacaoData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [catadorSelecionadoId, setCatadorSelecionadoId] = useState(null); // Adicionando estado para o ID do catador selecionado
+    const [associacaoSelecionadoId, setassociacaoSelecionadoId] = useState(null); 
     const [modalAdicionarShow, setModalAdicionarShow] = useState(false);
     const [modalEditarShow, setModalEditarShow] = useState(false);
     const [showConfirmacaoModal, setShowConfirmacaoModal] = useState(false);
-    // Estado para armazenar o ID do catador a ser excluído
-    const [catadorParaExcluir, setCatadorParaExcluir] = useState(null);
+    const [associacaoParaExcluir, setAssociacaoParaExcluir] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false); // Adicione esta linha
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false); 
 
 
 
 
-    console.log(catadorData);
+    console.log(associacaoData);
 
 
-    const handleExcluirCatador = (catadorId) => {
+    const handleExcluirAssociacao = (associacaoId) => {
     
-            axios.delete(`http://18.219.127.240:3000/api/v1/catadores/${catadorId}`)
+            axios.delete(`http://18.219.127.240:3000/api/v1/associacoes/${associacaoId}`)
                 .then(response => {
                     if (response && response.status === 200) {
-                        toast.success('Catador excluído com sucesso!');
-                        setCatadorData(prevCatadores => prevCatadores.filter(catador => catador.id !== catadorId));
-                        // Atualizar a lista de catadores após a exclusão (pode ser necessário recarregar a página ou obter novamente os dados)
+                        toast.success('Associacao excluída com sucesso!');
+                        setAssociacaoData(prevAssociacoes => prevAssociacoes.filter(associacao => associacao.id !== associacaoId));
+                        // Atualizar a lista de associacoes após a exclusão (pode ser necessário recarregar a página ou obter novamente os dados)
                     } else {
-                        console.error('Resposta inválida ao excluir catador:', response);
-                        toast.error('Erro ao excluir catador. Resposta inválida do servidor.');
+                        console.error('Resposta inválida ao excluir a:', response);
+                        toast.error('Erro ao excluir associacao. Resposta inválida do servidor.');
 
                     }
                 })
                 .catch(error => {
-                    console.error('Erro ao excluir catador:', error);
+                    console.error('Erro ao excluir associacao:', error);
                     const errorMessage = error.response && error.response.data && error.response.data.message
                         ? error.response.data.message
-                        : 'Erro desconhecido ao excluir catador.';
-                    toast.error(`Erro ao excluir catador: ${errorMessage}`);
+                        : 'Erro desconhecido ao excluir associacao.';
+                    toast.error(`Erro ao excluir associacao: ${errorMessage}`);
                 });
         
     };
@@ -576,46 +410,40 @@ function ListarCatadores() {
     };
 
 
-    const filteredCatadores = catadorData
-        ? catadorData.filter(catador => {
+    const filteredAssociacoes = associacaoData
+        ? associacaoData.filter(associacao => {
             const searchString = searchQuery.toLowerCase();
             return (
-                catador.user.name.toLowerCase().includes(searchString) ||
-                catador.cpf.includes(searchString) ||
-                catador.user.email.toLowerCase().includes(searchString)
+                associacao.user.name.toLowerCase().includes(searchString) ||
+                associacao.cnpj.includes(searchString) ||
+                associacao.user.email.toLowerCase().includes(searchString)
             );
         })
         : [];
 
 
 
-    const handleExcluirConfirmacao = (catadorId) => {
-        setCatadorParaExcluir(catadorId);
+    const handleExcluirConfirmacao = (associacaoId) => {
+        setAssociacaoParaExcluir(associacaoId);
         setShowConfirmacaoModal(true);
     };
 
-    // Função para confirmar a exclusão
     const handleConfirmarExclusao = () => {
-        // Chamar a função de exclusão com o ID do catador
-        handleExcluirCatador(catadorParaExcluir);
-        // Esconder o modal de confirmação
+       
+        handleExcluirAssociacao(associacaoParaExcluir);
         setShowConfirmacaoModal(false);
     };
 
-    // Função para cancelar a exclusão
     const handleCancelarExclusao = () => {
-        // Limpar o ID do catador
-        setCatadorParaExcluir(null);
-        // Esconder o modal de confirmação
+        setAssociacaoParaExcluir(null);
         setShowConfirmacaoModal(false);
     };
 
 
-    // Token de autenticação
     const autenticacao = Autenticacao();
     const token = autenticacao.token;
 
-    // Configuração do cabeçalho com o token
+ 
     const config = {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -623,20 +451,19 @@ function ListarCatadores() {
     };
 
     useEffect(() => {
-        // Fazendo a chamada para o backend para obter os dados do catador
-        axios.get('http://18.219.127.240:3000/api/v1/catadores/pega-catadores/associacao', config)
+        axios.get('http://18.219.127.240:3000/api/v1/associacoes', config)
             .then(response => {
-                setCatadorData(response.data);
+                setAssociacaoData(response.data);
 
                 if (!showSuccessMessage) {
-                    toast.success('Catadores listados com sucesso!');
-                    setShowSuccessMessage(true); // Atualize o estado para evitar exibir a mensagem novamente
+                    toast.success('Associacoes listadas com sucesso!');
+                    setShowSuccessMessage(true); 
                 }
 
             })
             .catch(error => {
-                console.error('Erro ao obter os dados do catador:', error);
-                toast.error('Erro ao criar catador. Verifique os dados e tente novamente.');
+                console.error('Erro ao obter os dados do associacao:', error);
+                toast.error('Erro ao criar associacao. Verifique os dados e tente novamente.');
 
             });
     }, [searchQuery]);
@@ -651,13 +478,13 @@ function ListarCatadores() {
     };
 
     // Definimos a quantidade de resultados por página
-    const resultsPerPage = 2;
+    const resultsPerPage = 5;
 
     // Filtramos os resultados da página atual
-    const currentResults = catadorData ? paginateResults(catadorData, currentPage, resultsPerPage) : [];
+    const currentResults = associacaoData ? paginateResults(associacaoData, currentPage, resultsPerPage) : [];
 
     // Calculamos o número total de páginas
-    const totalPages = catadorData ? Math.ceil(catadorData.length / resultsPerPage) : 0;
+    const totalPages = associacaoData ? Math.ceil(associacaoData.length / resultsPerPage) : 0;
 
     return (
 
@@ -689,13 +516,13 @@ function ListarCatadores() {
                     <Button type='submit' className='btn-orange' onClick={() => setModalAdicionarShow(true)}>
                         <BsPlusCircleFill /> Adicionar
                     </Button>
-                    <AdicionarCatador show={modalAdicionarShow} onHide={() => setModalAdicionarShow(false)} />
+                    <AdicionarAssociacao show={modalAdicionarShow} onHide={() => setModalAdicionarShow(false)} />
 
                 </Col>
                 <Col>
-                    <h3 className='m-3' style={{ color: '#EF7A2A' }}>Lista de Catadores</h3>
+                    <h3 className='m-3' style={{ color: '#EF7A2A' }}>Lista de Associações</h3>
                     <ListGroup as='ol' numbered>
-                    {paginateResults(filteredCatadores, currentPage, resultsPerPage).map((catador, index) => (
+                    {paginateResults(filteredAssociacoes, currentPage, resultsPerPage).map((associacao, index) => (
                             <ListGroup.Item
                                 key={index}
                                 action
@@ -703,39 +530,39 @@ function ListarCatadores() {
                                 className="d-flex justify-content-between align-items-start"
                             >
                                 <div className='ms-2 me-auto'>
-                                    <div className="fw-bold">{catador.user.name}</div>
-                                    CPF: {catador.cpf} <br />
-                                    Email: {catador.user.email}
+                                    <div className="fw-bold">{associacao.user.name}</div>
+                                    CNPJ: {associacao.cnpj} <br />
+                                    Email: {associacao.user.email}
                                 </div>
                                 <div>
                                     <ConfirmacaoModal
                                         show={showConfirmacaoModal}
                                         onHide={handleCancelarExclusao}
                                         onConfirm={handleConfirmarExclusao}
-                                        mensagem="Tem certeza que deseja excluir este catador?"
+                                        mensagem="Tem certeza que deseja excluir essa associacao?"
                                     />
 
 
                                     <Button type='submit' className="mx-2 btn-orange"
                                         onClick={() => {
-                                            setCatadorSelecionadoId(catador.id);
+                                            setassociacaoSelecionadoId(associacao.id);
                                             setModalEditarShow(true);
                                         }}>
                                         <BsPen /> Editar
                                     </Button>
                                     <Button type='submit' className="btn-orange"
-                                        onClick={() => handleExcluirConfirmacao(catador.id)} >
+                                        onClick={() => handleExcluirConfirmacao(associacao.id)} >
                                         <BsTrash /> Excluir
                                     </Button>
                                 </div>
                             </ListGroup.Item>
                         ))}
                     </ListGroup>
-                    {catadorSelecionadoId && (
-                        <EditarCatador
+                    {associacaoSelecionadoId && (
+                        <EditarAssociacao
                             show={modalEditarShow}
                             onHide={() => setModalEditarShow(false)}
-                            catadorId={catadorSelecionadoId}
+                            associacaoId={associacaoSelecionadoId}
                         />
                     )}
                     <Pagination className='pagination-orange mt-3 justify-content-center'>
@@ -767,4 +594,4 @@ function ListarCatadores() {
     );
 }
 
-export default ListarCatadores;
+export default ListarAssociacoes;
