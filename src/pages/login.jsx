@@ -37,7 +37,7 @@ function Login() {
             email: email,
             password: password
         };
-        axios.post('http://18.219.127.240:3000/login', data)
+        axios.post('http://3.129.19.7:3000/login', data)
             .then((response) => {
                 // se a resposta for 200, gera o token
                 if (response.status === 200) {

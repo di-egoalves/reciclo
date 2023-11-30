@@ -9,13 +9,13 @@ function EsqueciSenhaModal({ show, onClose }) {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.get(`http://18.219.127.240:3000/api/v1/users`);
+      const response = await axios.get(`http://3.129.19.7:3000/api/v1/users`);
       const usuarios = response.data;
 
       const isEmailRegistered = usuarios.some(usuario => usuario.email === email);
 
       if (isEmailRegistered) {
-        await axios.post(`http://18.219.127.240:3000/esqueceu-senha`, { email });
+        await axios.post(`http://3.129.19.7:3000/esqueceu-senha`, { email });
 
         toast.success("Instruções de recuperação de senha enviadas para o email.", {
           position: "bottom-right",

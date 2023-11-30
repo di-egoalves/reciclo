@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Button, Container, Form, Row } from 'react-bootstrap';
 import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import '../style/css.css';
+import { useNavigate } from 'react-router-dom';
+
 
 function AcompanhamentoColeta() {
     const [selectedOptionRota, setSelectedOptionRota] = useState(null);
@@ -14,6 +16,11 @@ function AcompanhamentoColeta() {
         setOptionVeiculo(option);
     };
 
+    const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/acompanhamento-coleta');
+  };
 
 
     return (

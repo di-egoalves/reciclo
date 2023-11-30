@@ -21,12 +21,17 @@ const AdicionarCatador = (props) => {
     const [associacoes, setAssociacoes] = useState([]);
     const [etnias, setEtnias] = useState([]);
     const [generos, setGeneros] = useState([]);
+    const [funcoes, setFuncoes] = useState([]);
     const [selectedAssociacao, setSelectedAssociacao] = useState('');
     const [selectedEtnia, setSelectedEtnia] = useState('');
     const [selectedGenero, setSelectedGenero] = useState('');
+    const [selectedFuncao, setSelectedFuncao] = useState('');
+
     const [visualSelectedAssociacao, setVisualSelectedAssociacao] = useState('');
     const [visualSelectedEtnia, setVisualSelectedEtnia] = useState('');
     const [visualSelectedGenero, setVisualSelectedGenero] = useState('');
+    const [visualSelectedFuncao, setVisualSelectedFuncao] = useState('');
+
     const [bairro, setBairro] = useState('');
     const [endereco, setEndereco] = useState('');
 
@@ -40,9 +45,11 @@ const AdicionarCatador = (props) => {
             }
         };
 
-        fetchData('http://18.219.127.240:3000/api/v1/associacoes', setAssociacoes);
-        fetchData('http://18.219.127.240:3000/api/v1/etnia', setEtnias);
-        fetchData('http://18.219.127.240:3000/api/v1/genero', setGeneros);
+        fetchData('http://3.129.19.7:3000/api/v1/associacoes', setAssociacoes);
+        fetchData('http://3.129.19.7:3000/api/v1/etnia', setEtnias);
+        fetchData('http://3.129.19.7:3000/api/v1/genero', setGeneros);
+        fetchData('http://3.129.19.7:3000/api/v1/funcoes-catador', setFuncoes);
+
     }, []);
 
     const handleAssociacaoChange = (event) => {
@@ -63,6 +70,12 @@ const AdicionarCatador = (props) => {
         setVisualSelectedGenero(genero ? genero.nomenclatura : '');
     };
 
+    const handleFuncaoChange = (event) => {
+        const funcao = funcoes.find(f => f.funcao === event.target.innerText);
+        setSelectedFuncao(funcao ? funcao.id : '');
+        setVisualSelectedFuncao(funcao ? funcao.funcao : '');
+    };
+
     const handleSubmit = () => {
         const dataToSend = {
             cpf: cpf,
@@ -77,10 +90,11 @@ const AdicionarCatador = (props) => {
             idAssociacao: selectedAssociacao,
             idEtnia: selectedEtnia,
             idGenero: selectedGenero,
+            funcaoId: selectedFuncao
         };
         console.log(dataToSend)
 
-        axios.post('http://18.219.127.240:3000/api/v1/catadores', dataToSend)
+        axios.post('http://3.129.19.7:3000/api/v1/catadores', dataToSend)
             .then(response => {
 
 
@@ -96,6 +110,8 @@ const AdicionarCatador = (props) => {
                     setSelectedAssociacao('');
                     setSelectedEtnia('');
                     setSelectedGenero('');
+                    setSelectedFuncao('');
+
                     toast.success('Catador criado com sucesso!');
                     props.onHide();
                     window.location.reload()
@@ -222,7 +238,6 @@ const AdicionarCatador = (props) => {
                             ))}
                         </Dropdown.Menu>
                     </Dropdown>
-
                     <Form.Label className='text-orange'>
                         Gênero
                     </Form.Label>
@@ -234,6 +249,21 @@ const AdicionarCatador = (props) => {
                             {generos.map((genero, index) => (
                                 <Dropdown.Item key={index} onClick={handleGeneroChange}>
                                     {genero.nomenclatura}
+                                </Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Form.Label className='text-orange'>
+                        Função do catador
+                    </Form.Label>
+                    <Dropdown className='w-100'>
+                        <Dropdown.Toggle className='w-100 outline-white' id="dropdown-basic">
+                            {visualSelectedFuncao || 'Selecione uma Função'}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className='w-100'>
+                            {funcoes.map((funcao, index) => (
+                                <Dropdown.Item key={index} onClick={handleFuncaoChange}>
+                                    {funcao.funcao}
                                 </Dropdown.Item>
                             ))}
                         </Dropdown.Menu>
@@ -262,9 +292,13 @@ function EditarCatador(props) {
     const [associacoes, setAssociacoes] = useState([]);
     const [etnias, setEtnias] = useState([]);
     const [generos, setGeneros] = useState([]);
+    const [funcoes, setFuncoes] = useState([]);
+
     const [selectedAssociacao, setSelectedAssociacao] = useState('');
     const [selectedEtnia, setSelectedEtnia] = useState('');
     const [selectedGenero, setSelectedGenero] = useState('');
+    const [selectedFuncao, setSelectedFuncao] = useState('');
+
     const [visualSelectedGenero, setVisualSelectedGenero] = useState('');
     const [visualSelectedAssociacao, setVisualSelectedAssociacao] = useState('');
     const [visualSelectedEtnia, setVisualSelectedEtnia] = useState('');
@@ -274,6 +308,8 @@ function EditarCatador(props) {
     const [selectedGeneroId, setSelectedGeneroId] = useState('');
     const [selectedEtniaName, setSelectedEtniaName] = useState('');
     const [selectedGeneroName, setSelectedGeneroName] = useState('');
+    const [selectedFuncaoName, setSelectedFuncaoName] = useState('');
+
     const [catador, setCatador] = useState(null);
 
     const [catadorSelecionadoId, setCatadorSelecionadoId] = useState(props.catadorId); // Utilizando o ID do catador passado como prop
@@ -286,6 +322,7 @@ function EditarCatador(props) {
                 const catadorAssociacao = response.data.associacao;
                 const catadorEtnia = response.data.etnia;
                 const catadorGenero = response.data.genero;
+                const catadorFuncao = response.data.funcoescatador
 
                 setNome(response.data.user.name);
                 setCpf(response.data.cpf);
@@ -303,16 +340,20 @@ function EditarCatador(props) {
                 setSelectedGenero(catadorGenero.id);
                 setSelectedGeneroName(catadorGenero.nomenclatura);
 
+                setSelectedFuncao(catadorFuncao.id);
+                setSelectedFuncaoName(catadorFuncao.funcao)
 
 
             } catch (error) {
                 console.error('Erro ao obter dados:', error);
             }
         };
-        fetchData(`http://18.219.127.240:3000/api/v1/catadores/${props.catadorId}`, setCatador);
-        fetchData('http://18.219.127.240:3000/api/v1/associacoes', setAssociacoes);
-        fetchData('http://18.219.127.240:3000/api/v1/etnia', setEtnias);
-        fetchData('http://18.219.127.240:3000/api/v1/genero', setGeneros);
+        fetchData(`http://3.129.19.7:3000/api/v1/catadores/${props.catadorId}`, setCatador);
+        fetchData('http://3.129.19.7:3000/api/v1/associacoes', setAssociacoes);
+        fetchData('http://3.129.19.7:3000/api/v1/etnia', setEtnias);
+        fetchData('http://3.129.19.7:3000/api/v1/genero', setGeneros);
+        fetchData('http://3.129.19.7:3000/api/v1/funcoes-catador', setFuncoes);
+
     }, [props.catadorId]);
 
     const handleAssociacaoChange = (event) => {
@@ -331,7 +372,15 @@ function EditarCatador(props) {
         const genero = generos.find(g => g.nomenclatura === event.target.innerText);
         setSelectedGenero(genero ? genero.id : '');
         setSelectedGeneroName(genero ? genero.nomenclatura : '');
+    };  
+
+    const handleFuncaoChange = (event) => {
+        const funcao = funcoes.find(f => f.funcao === event.target.innerText);
+        setSelectedFuncao(funcao ? funcao.id : '');
+        setSelectedFuncaoName(funcao ? funcao.funcao : '');
     };
+
+
     const handleSubmit = () => {
         const dataToSend = {
             cpf: cpf,
@@ -346,10 +395,11 @@ function EditarCatador(props) {
             associacaoId: selectedAssociacaoId,
             idEtnia: selectedEtnia,
             idGenero: selectedGenero,
+            funcaoId: selectedFuncao
         };
         console.log(dataToSend)
         console.log(props.catadorId)
-        axios.put(`http://18.219.127.240:3000/api/v1/catadores/${props.catadorId}`, dataToSend)
+        axios.put(`http://3.129.19.7:3000/api/v1/catadores/${props.catadorId}`, dataToSend)
             .then(response => {
                 if (response && response.data) {
                     console.log('Catador atualizado com sucesso:', response.data);
@@ -497,6 +547,21 @@ function EditarCatador(props) {
                             ))}
                         </Dropdown.Menu>
                     </Dropdown>
+                    <Form.Label className='text-orange'>
+                        Função
+                    </Form.Label>
+                    <Dropdown className='w-100'>
+                        <Dropdown.Toggle className='w-100 outline-white' id="dropdown-basic">
+                            {selectedFuncaoName || 'Selecione uma Função'}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className='w-100'>
+                            {funcoes.map((funcao, index) => (
+                                <Dropdown.Item key={index} onClick={handleFuncaoChange}>
+                                    {funcao.funcao}
+                                </Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -529,27 +594,27 @@ function ListarCatadores() {
 
 
     const handleExcluirCatador = (catadorId) => {
-    
-            axios.delete(`http://18.219.127.240:3000/api/v1/catadores/${catadorId}`)
-                .then(response => {
-                    if (response && response.status === 200) {
-                        toast.success('Catador excluído com sucesso!');
-                        setCatadorData(prevCatadores => prevCatadores.filter(catador => catador.id !== catadorId));
-                        // Atualizar a lista de catadores após a exclusão (pode ser necessário recarregar a página ou obter novamente os dados)
-                    } else {
-                        console.error('Resposta inválida ao excluir catador:', response);
-                        toast.error('Erro ao excluir catador. Resposta inválida do servidor.');
 
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao excluir catador:', error);
-                    const errorMessage = error.response && error.response.data && error.response.data.message
-                        ? error.response.data.message
-                        : 'Erro desconhecido ao excluir catador.';
-                    toast.error(`Erro ao excluir catador: ${errorMessage}`);
-                });
-        
+        axios.delete(`http://3.129.19.7:3000/api/v1/catadores/${catadorId}`)
+            .then(response => {
+                if (response && response.status === 200) {
+                    toast.success('Catador excluído com sucesso!');
+                    setCatadorData(prevCatadores => prevCatadores.filter(catador => catador.id !== catadorId));
+                    // Atualizar a lista de catadores após a exclusão (pode ser necessário recarregar a página ou obter novamente os dados)
+                } else {
+                    console.error('Resposta inválida ao excluir catador:', response);
+                    toast.error('Erro ao excluir catador. Resposta inválida do servidor.');
+
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao excluir catador:', error);
+                const errorMessage = error.response && error.response.data && error.response.data.message
+                    ? error.response.data.message
+                    : 'Erro desconhecido ao excluir catador.';
+                toast.error(`Erro ao excluir catador: ${errorMessage}`);
+            });
+
     };
 
 
@@ -624,7 +689,7 @@ function ListarCatadores() {
 
     useEffect(() => {
         // Fazendo a chamada para o backend para obter os dados do catador
-        axios.get('http://18.219.127.240:3000/api/v1/catadores/pega-catadores/associacao', config)
+        axios.get('http://3.129.19.7:3000/api/v1/catadores/pega-catadores/associacao', config)
             .then(response => {
                 setCatadorData(response.data);
 
@@ -673,19 +738,19 @@ function ListarCatadores() {
                 </Col>
                 <hr className='m-4' />
                 <Col md={12} className="d-flex align-items-center justify-content-between">
-                <InputGroup className="w-75">
-                <FormControl
-                    className='custom-focus'
-                    placeholder="Pesquisar"
-                    aria-label="Pesquisar"
-                    aria-describedby="basic-addon2"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <Button type='submit' className='btn-orange' id="button-addon2">
-                    <BsSearch className='' /> Buscar
-                </Button>
-            </InputGroup>
+                    <InputGroup className="w-75">
+                        <FormControl
+                            className='custom-focus'
+                            placeholder="Pesquisar"
+                            aria-label="Pesquisar"
+                            aria-describedby="basic-addon2"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <Button type='submit' className='btn-orange' id="button-addon2">
+                            <BsSearch className='' /> Buscar
+                        </Button>
+                    </InputGroup>
                     <Button type='submit' className='btn-orange' onClick={() => setModalAdicionarShow(true)}>
                         <BsPlusCircleFill /> Adicionar
                     </Button>
@@ -695,7 +760,7 @@ function ListarCatadores() {
                 <Col>
                     <h3 className='m-3' style={{ color: '#EF7A2A' }}>Lista de Catadores</h3>
                     <ListGroup as='ol' numbered>
-                    {paginateResults(filteredCatadores, currentPage, resultsPerPage).map((catador, index) => (
+                        {paginateResults(filteredCatadores, currentPage, resultsPerPage).map((catador, index) => (
                             <ListGroup.Item
                                 key={index}
                                 action

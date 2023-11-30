@@ -1,4 +1,4 @@
- import { Badge, Button, Col, Container, FormControl, InputGroup, ListGroup, Pagination, Row, Modal, Form, FormLabel, Dropdown } from 'react-bootstrap';
+import { Badge, Button, Col, Container, FormControl, InputGroup, ListGroup, Pagination, Row, Modal, Form, FormLabel, Dropdown } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
 import { BsFilePlus, BsPen, BsPeopleFill, BsPlusCircleFill, BsSearch, BsTrash } from 'react-icons/bs';
 import '../style/css.css';
@@ -12,23 +12,12 @@ import { toast } from "react-hot-toast";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-const AdicionarAssociacao = (props) => {
-    const [cnpj, setCnpj] = useState('');
+const AdicionarOperadorLogistico = (props) => {
+    const [cpf, setCpf] = useState('');
     const [telefone, setTelefone] = useState('');
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [associacoes, setAssociacoes] = useState([]);
-    const [etnias, setEtnias] = useState([]);
-    const [generos, setGeneros] = useState([]);
-    const [selectedAssociacao, setSelectedAssociacao] = useState('');
-    const [selectedEtnia, setSelectedEtnia] = useState('');
-    const [selectedGenero, setSelectedGenero] = useState('');
-    const [visualSelectedAssociacao, setVisualSelectedAssociacao] = useState('');
-    const [visualSelectedEtnia, setVisualSelectedEtnia] = useState('');
-    const [visualSelectedGenero, setVisualSelectedGenero] = useState('');
-    const [bairro, setBairro] = useState('');
-    const [endereco, setEndereco] = useState('');
+ 
 
     useEffect(() => {
         const fetchData = async (url, setterFunction) => {
@@ -39,56 +28,48 @@ const AdicionarAssociacao = (props) => {
                 console.error('Erro ao obter dados:', error);
             }
         };
-
-   
     }, []);
 
-  
+
     const handleSubmit = () => {
         const dataToSend = {
-           
+      
             user: {
                 name: nome,
                 email: email,
                 phone: telefone,
-                status: true
+                status: true,
             },
-            cnpj: cnpj,
-            bairro: bairro,
-            endereco: endereco,
-          
+            cpf: cpf,
         };
         console.log(dataToSend)
 
-        axios.post('http://3.129.19.7:3000/api/v1/associacoes', dataToSend)
+        axios.post('http://3.129.19.7:3000/api/v1/operador-logistico', dataToSend)
             .then(response => {
 
 
                 if (response && response.data) {
-                    console.log('Associacao criado com sucesso:', response.data);
+                    console.log('Operador criado com sucesso:', response.data);
                     setNome('');
                     setEmail('');
-                    setPassword('');
-                    setCnpj('');
+                    setCpf('');
                     setTelefone('');
-                    setBairro('');
-                    setEndereco('');
-                    toast.success('Associacao criado com sucesso!');
+                    toast.success('Operador criado com sucesso!');
                     props.onHide();
                     window.location.reload()
                 } else {
-                    console.error('Resposta inválida ao criar associacao:', response);
-                    toast.error('Erro ao criar associacao. Resposta inválida do servidor.',);
+                    console.error('Resposta inválida ao criar Administrador:', response);
+                    toast.error('Erro ao criar Operador. Resposta inválida do servidor.',);
                 }
             })
 
             .catch(error => {
-                console.error('Erro ao criar associacao:', error.response.data);
+                console.error('Erro ao criar Administrador:', error.response.data);
                 const errorMessage = error.response.data && error.response.data.message
                     ? error.response.data.message
-                    : 'Erro desconhecido ao criar associacao.';
+                    : 'Erro desconhecido ao criar operador.';
 
-                toast.error(`Erro ao criar associacao: ${errorMessage}`);
+                toast.error(`Erro ao criar operador: ${errorMessage}`);
 
             });
 
@@ -119,13 +100,13 @@ const AdicionarAssociacao = (props) => {
                     />
 
                     <Form.Label className='text-orange'>
-                        CNPJ
+                        CPF
                     </Form.Label>
                     <InputMask
                         className="form-control custom-focus"
-                        mask="99.999.999/0009-99"
-                        value={cnpj}
-                        onChange={(e) => setCnpj(e.target.value)}
+                        mask="999.999.999-99"
+                        value={cpf}
+                        onChange={(e) => setCpf(e.target.value)}
                     />
 
                     <Form.Label className='text-orange'>
@@ -147,25 +128,7 @@ const AdicionarAssociacao = (props) => {
                         value={telefone}
                         onChange={(e) => setTelefone(e.target.value)}
                     />
-                    <Form.Label className='text-orange'>
-                        Bairro
-                    </Form.Label>
-                    <FormControl
-                        className="form-control custom-focus"
-                        type='text'
-                        value={bairro}
-                        onChange={(e) => setBairro(e.target.value)}
-                    />
 
-                    <Form.Label className='text-orange'>
-                        Endereço
-                    </Form.Label>
-                    <FormControl
-                        className="form-control custom-focus"
-                        type='text'
-                        value={endereco}
-                        onChange={(e) => setEndereco(e.target.value)}
-                    />
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -180,80 +143,76 @@ const AdicionarAssociacao = (props) => {
 
 
 
-function EditarAssociacao(props) {
+function EditarOperadorLogistico(props) {
     const [nome, setNome] = useState('');
-    const [cnpj, setCnpj] = useState('');
+    const [cpf, setCpf] = useState('');
     const [email, setEmail] = useState('');
     const [telefone, setTelefone] = useState('');
-    const [bairro, setBairro] = useState('');
-    const [endereco, setEndereco] = useState('');
+   
+   
+    const [operador, setOperador] = useState(null);
 
-    const [associacao, setAssociacao] = useState(null);
-
-    const [associacaoSelecionadoId, setassociacaoSelecionadoId] = useState(props.associacaoId);
+    const [operadorSelecionadoId, setOperadorSelecionadoId] = useState(props.operadorId);
 
     useEffect(() => {
         const fetchData = async (url, setterFunction) => {
             try {
                 const response = await axios.get(url);
                 setterFunction(response.data);
+             
 
                 setNome(response.data.user.name);
-                setCnpj(response.data.cnpj);
+                setCpf(response.data.cpf);
                 setEmail(response.data.user.email);
                 setTelefone(response.data.user.phone);
-                setBairro(response.data.bairro);
-                setEndereco(response.data.endereco);
+            
             } catch (error) {
                 console.error('Erro ao obter dados:', error);
             }
         };
-        fetchData(`http://3.129.19.7:3000/api/v1/associacoes/${props.associacaoId}`, setAssociacao);
+        fetchData(`http://3.129.19.7:3000/api/v1/operador-logistico/${props.operadorId}`, setOperador);
+       
+    }, [props.operadorId]);
 
-    }, [props.associacaoId]);
-
-    
+  
     const handleSubmit = () => {
         const dataToSend = {
-        
+            cpf: cpf,
             user: {
                 name: nome,
                 email: email,
                 phone: telefone,
                 status: true,
             },
-            cnpj: cnpj,
-            bairro: bairro,
-            endereco: endereco
-
+         
         };
         console.log(dataToSend)
-        console.log(props.associacaoId)
-        axios.put(`http://3.129.19.7:3000/api/v1/associacoes/${props.associacaoId}`, dataToSend)
+        console.log(props.operadorId)
+        axios.put(`http://3.129.19.7:3000/api/v1/operador-logistico/${props.operadorId}`, dataToSend)
             .then(response => {
                 if (response && response.data) {
-                    console.log('Associacao atualizado com sucesso:', response.data);
-                    toast.success('Associacao atualizado com sucesso');
+                    console.log('Operador atualizado com sucesso:', response.data);
+                    toast.success('Operador atualizado com sucesso');
                     props.onHide();
 
-                    setAssociacao(response.data);
+                    setOperador(response.data);
                     window.location.reload();
-                    console.log('Após a atualização do estado associacao:', associacao);
+                    console.log('Após a atualização do estado operador:', operador);
 
 
 
 
                 } else {
-                    console.error('Resposta inválida ao atualizar associacao:', response);
+                    console.error('Resposta inválida ao atualizar operador:', response);
                 }
             })
             .catch(error => {
-                console.error('Erro ao atualizar associacao:', error);
+                console.error('Erro ao atualizar operador:', error);
                 const errorMessage = error.response.data && error.response.data.message
                     ? error.response.data.message
-                    : 'Erro desconhecido ao criar associacao.';
+                    : 'Erro desconhecido ao criar operador.';
 
-                toast.error(`Erro ao criar Associacao: ${errorMessage}`);
+                toast.error(`Erro ao criar operador: ${errorMessage}`);
             });
     };
 
@@ -267,7 +226,7 @@ function EditarAssociacao(props) {
         >
             <Modal.Header closeButton>
                 <Modal.Title style={{ color: '#EF7A2A' }}>
-                    Editar Associacao
+                    Editar Administrador
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -283,13 +242,13 @@ function EditarAssociacao(props) {
                     />
 
                     <Form.Label className='text-orange'>
-                        CNPJ
+                        CPF
                     </Form.Label>
                     <FormControl
                         className="form-control custom-focus"
                         type='text'
-                        value={cnpj}
-                        onChange={(e) => setCnpj(e.target.value)}
+                        value={cpf}
+                        onChange={(e) => setCpf(e.target.value)}
                     />
 
                     <Form.Label className='text-orange'>
@@ -312,25 +271,6 @@ function EditarAssociacao(props) {
                         onChange={(e) => setTelefone(e.target.value)}
                     />
 
-                    <Form.Label className='text-orange'>
-                        Bairro
-                    </Form.Label>
-                    <FormControl
-                        className="form-control custom-focus"
-                        type='text'
-                        value={bairro}
-                        onChange={(e) => setBairro(e.target.value)}
-                    />
-
-                    <Form.Label className='text-orange'>
-                        Endereço
-                    </Form.Label>
-                    <FormControl
-                        className="form-control custom-focus"
-                        type='text'
-                        value={endereco}
-                        onChange={(e) => setEndereco(e.target.value)}
-                    />
                   
                 </Form>
             </Modal.Body>
@@ -345,43 +285,44 @@ function EditarAssociacao(props) {
 
 
 
-function ListarAssociacoes() {
-    const [associacaoData, setAssociacaoData] = useState([]);
+function ListarOperadorLogistico() {
+    const [operadorData, setOperadorData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [associacaoSelecionadoId, setassociacaoSelecionadoId] = useState(null); 
-    const [modalAdicionarShow, setModalAdicionarShow] = useState(false);
+    const [operadorSelecionadoId, setOperadorSelecionadoId] = useState(null);
+    const [modalAdicionarShow, setModalAdicionarShow] = useState(false); 
     const [modalEditarShow, setModalEditarShow] = useState(false);
     const [showConfirmacaoModal, setShowConfirmacaoModal] = useState(false);
-    const [associacaoParaExcluir, setAssociacaoParaExcluir] = useState(null);
+    const [operadorParaExcluir, setOperadorParaExcluir] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [showSuccessMessage, setShowSuccessMessage] = useState(false); 
 
 
 
 
-    console.log(associacaoData);
+    console.log(operadorData);
 
 
-    const handleExcluirAssociacao = (associacaoId) => {
+    const handleExcluirOperador = (operadorId) => {
     
-            axios.delete(`http://3.129.19.7:3000/api/v1/associacoes/${associacaoId}`)
+        setOperadorData(prevOperadores => prevOperadores.filter(operador => operador.id !== operadorId));
+
+            axios.delete(`http://3.129.19.7:3000/api/v1/operador-logistico/${operadorId}`)
                 .then(response => {
                     if (response && response.status === 200) {
-                        toast.success('Associacao excluída com sucesso!');
-                        setAssociacaoData(prevAssociacoes => prevAssociacoes.filter(associacao => associacao.id !== associacaoId));
-                        // Atualizar a lista de associacoes após a exclusão (pode ser necessário recarregar a página ou obter novamente os dados)
+                        toast.success('Operador excluído com sucesso!');
+                        setOperadorData(prevAdministradores => prevAdministradores.filter(operadorId => operadorId.id !== operadorId));
                     } else {
-                        console.error('Resposta inválida ao excluir a:', response);
-                        toast.error('Erro ao excluir associacao. Resposta inválida do servidor.');
+                        console.error('Resposta inválida ao excluir operador:', response);
+                        toast.error('Erro ao excluir operador. Resposta inválida do servidor.');
 
                     }
                 })
                 .catch(error => {
-                    console.error('Erro ao excluir associacao:', error);
+                    console.error('Erro ao excluir operador:', error);
                     const errorMessage = error.response && error.response.data && error.response.data.message
                         ? error.response.data.message
-                        : 'Erro desconhecido ao excluir associacao.';
-                    toast.error(`Erro ao excluir associacao: ${errorMessage}`);
+                        : 'Erro desconhecido ao excluir operador.';
+                    toast.error(`Erro ao excluir operador: ${errorMessage}`);
                 });
         
     };
@@ -410,40 +351,40 @@ function ListarAssociacoes() {
     };
 
 
-    const filteredAssociacoes = associacaoData
-        ? associacaoData.filter(associacao => {
+    const filteredOperadores = operadorData
+        ? operadorData.filter(operador => {
             const searchString = searchQuery.toLowerCase();
             return (
-                associacao.user.name.toLowerCase().includes(searchString) ||
-                associacao.cnpj.includes(searchString) ||
-                associacao.user.email.toLowerCase().includes(searchString)
+                operador.user.name.toLowerCase().includes(searchString) ||
+                operador.cpf.includes(searchString) ||
+                operador.user.email.toLowerCase().includes(searchString)
             );
         })
         : [];
 
 
 
-    const handleExcluirConfirmacao = (associacaoId) => {
-        setAssociacaoParaExcluir(associacaoId);
+    const handleExcluirConfirmacao = (operadorId) => {
+        setOperadorParaExcluir(operadorId);
         setShowConfirmacaoModal(true);
     };
 
     const handleConfirmarExclusao = () => {
-       
-        handleExcluirAssociacao(associacaoParaExcluir);
+        handleExcluirOperador(operadorParaExcluir);
         setShowConfirmacaoModal(false);
     };
 
     const handleCancelarExclusao = () => {
-        setAssociacaoParaExcluir(null);
+        setOperadorParaExcluir(null);
         setShowConfirmacaoModal(false);
     };
 
 
+    // Token de autenticação
     const autenticacao = Autenticacao();
     const token = autenticacao.token;
 
- 
+    // Configuração do cabeçalho com o token
     const config = {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -451,19 +392,19 @@ function ListarAssociacoes() {
     };
 
     useEffect(() => {
-        axios.get('http://3.129.19.7:3000/api/v1/associacoes', config)
+        axios.get('http://3.129.19.7:3000/api/v1/operador-logistico', config)
             .then(response => {
-                setAssociacaoData(response.data);
+                setOperadorData(response.data);
 
                 if (!showSuccessMessage) {
-                    toast.success('Associacoes listadas com sucesso!');
+                    toast.success('Operadores listados com sucesso!');
                     setShowSuccessMessage(true); 
                 }
 
             })
             .catch(error => {
-                console.error('Erro ao obter os dados do associacao:', error);
-                toast.error('Erro ao criar associacao. Verifique os dados e tente novamente.');
+                console.error('Erro ao obter os dados do operador:', error);
+                toast.error('Erro ao criar operador. Verifique os dados e tente novamente.');
 
             });
     }, [searchQuery]);
@@ -481,10 +422,10 @@ function ListarAssociacoes() {
     const resultsPerPage = 5;
 
     // Filtramos os resultados da página atual
-    const currentResults = associacaoData ? paginateResults(associacaoData, currentPage, resultsPerPage) : [];
+    const currentResults = operadorData ? paginateResults(operadorData, currentPage, resultsPerPage) : [];
 
     // Calculamos o número total de páginas
-    const totalPages = associacaoData ? Math.ceil(associacaoData.length / resultsPerPage) : 0;
+    const totalPages = operadorData ? Math.ceil(operadorData.length / resultsPerPage) : 0;
 
     return (
 
@@ -516,13 +457,13 @@ function ListarAssociacoes() {
                     <Button type='submit' className='btn-orange' onClick={() => setModalAdicionarShow(true)}>
                         <BsPlusCircleFill /> Adicionar
                     </Button>
-                    <AdicionarAssociacao show={modalAdicionarShow} onHide={() => setModalAdicionarShow(false)} />
+                    <AdicionarOperadorLogistico show={modalAdicionarShow} onHide={() => setModalAdicionarShow(false)} />
 
                 </Col>
                 <Col>
-                    <h3 className='m-3' style={{ color: '#EF7A2A' }}>Lista de Associações</h3>
+                    <h3 className='m-3' style={{ color: '#EF7A2A' }}>Lista de Operadores</h3>
                     <ListGroup as='ol' numbered>
-                    {paginateResults(filteredAssociacoes, currentPage, resultsPerPage).map((associacao, index) => (
+                    {paginateResults(filteredOperadores, currentPage, resultsPerPage).map((operador, index) => (
                             <ListGroup.Item
                                 key={index}
                                 action
@@ -530,39 +471,39 @@ function ListarAssociacoes() {
                                 className="d-flex justify-content-between align-items-start"
                             >
                                 <div className='ms-2 me-auto'>
-                                    <div className="fw-bold">{associacao.user.name}</div>
-                                    CNPJ: {associacao.cnpj} <br />
-                                    Email: {associacao.user.email}
+                                    <div className="fw-bold">{operador.user.name}</div>
+                                    CPF: {operador.cpf} <br />
+                                    Email: {operador.user.email}
                                 </div>
                                 <div>
                                     <ConfirmacaoModal
                                         show={showConfirmacaoModal}
                                         onHide={handleCancelarExclusao}
                                         onConfirm={handleConfirmarExclusao}
-                                        mensagem="Tem certeza que deseja excluir essa associacao?"
+                                        mensagem="Tem certeza que deseja excluir este operador?"
                                     />
 
 
                                     <Button type='submit' className="mx-2 btn-orange"
                                         onClick={() => {
-                                            setassociacaoSelecionadoId(associacao.id);
+                                            setOperadorSelecionadoId(operador.id);
                                             setModalEditarShow(true);
                                         }}>
                                         <BsPen /> Editar
                                     </Button>
                                     <Button type='submit' className="btn-orange"
-                                        onClick={() => handleExcluirConfirmacao(associacao.id)} >
+                                        onClick={() => handleExcluirConfirmacao(operador.id)} >
                                         <BsTrash /> Excluir
                                     </Button>
                                 </div>
                             </ListGroup.Item>
                         ))}
                     </ListGroup>
-                    {associacaoSelecionadoId && (
-                        <EditarAssociacao
+                    {operadorSelecionadoId && (
+                        <EditarOperadorLogistico
                             show={modalEditarShow}
                             onHide={() => setModalEditarShow(false)}
-                            associacaoId={associacaoSelecionadoId}
+                            operadorId={operadorSelecionadoId}
                         />
                     )}
                     <Pagination className='pagination-orange mt-3 justify-content-center'>
@@ -594,4 +535,4 @@ function ListarAssociacoes() {
     );
 }
 
-export default ListarAssociacoes;
+export default ListarOperadorLogistico;

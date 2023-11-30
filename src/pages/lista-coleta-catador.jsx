@@ -450,7 +450,7 @@ function ListarColetasCatador() {
     useEffect(() => {
         axios
             .get(
-                "http://3.129.19.7:3000/api/v1/forms/coleta",
+                "http://3.129.19.7:3000/api/v1/forms/coleta/coletas/coletas-by-catadores",
                 config
             )
             .then((response) => {

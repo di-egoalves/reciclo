@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 export const ProtecaoLogistica = (props) => {
     const autenticacao = Autenticacao();
     const navigate = useNavigate();
-    const resposta = autenticacao.token && autenticacao.roleNames[0] === "logistica";
+    const resposta = autenticacao.token && autenticacao.roleNames[0] === "operador";
 
     if (!autenticacao.token || !resposta) {
         toast.error("Acesso negado.", { position: "bottom-right", duration: 2000 });
