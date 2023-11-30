@@ -9,7 +9,7 @@ export const ProtecaoLogistica = (props) => {
 
     if (!autenticacao.token || !resposta) {
         toast.error("Acesso negado.", { position: "bottom-right", duration: 2000 });
-        navigate("/error");
+        navigate("/error5");
         return <Navigate to="/error" />;
     }
 
