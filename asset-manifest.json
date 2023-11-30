@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/reciclo/static/css/main.d4480f12.css",
-    "main.js": "/reciclo/static/js/main.53582d1f.js",
-    "static/media/telaadmin.svg": "/reciclo/static/media/telaadmin.adef570c9a30ff0fda52e256c790a027.svg",
-    "static/media/backgroundlogin.png": "/reciclo/static/media/backgroundlogin.4f7c7dd1f8358dfe67c4.png",
-    "static/media/telalogin.svg": "/reciclo/static/media/telalogin.0a5ad612552f8f9f4fb137cf028ac48d.svg",
-    "static/media/404.png": "/reciclo/static/media/404.2b0a61c94258663106bb.png",
-    "static/media/imgopeadorlogistico.png": "/reciclo/static/media/imgopeadorlogistico.eda405e1a7cb8d7f714b.png",
-    "static/media/imgcatador.png": "/reciclo/static/media/imgcatador.8bad0a8ad2a92e0dd76c.png",
-    "static/media/imgassociacao.png": "/reciclo/static/media/imgassociacao.6d306a649284f5f0ac7a.png",
-    "static/media/imgadmin.png": "/reciclo/static/media/imgadmin.a7b50198e9aab479a7b5.png",
-    "static/media/reciclo-logo.png": "/reciclo/static/media/reciclo-logo.0857705499dcbba439d8.png",
-    "index.html": "/reciclo/index.html",
-    "main.d4480f12.css.map": "/reciclo/static/css/main.d4480f12.css.map",
-    "main.53582d1f.js.map": "/reciclo/static/js/main.53582d1f.js.map"
+    "main.css": "/static/css/main.39fc6a9f.css",
+    "main.js": "/static/js/main.d1d5a827.js",
+    "static/media/telaadmin.svg": "/static/media/telaadmin.adef570c9a30ff0fda52e256c790a027.svg",
+    "static/media/backgroundlogin.png": "/static/media/backgroundlogin.4f7c7dd1f8358dfe67c4.png",
+    "static/media/telalogin.svg": "/static/media/telalogin.0a5ad612552f8f9f4fb137cf028ac48d.svg",
+    "static/media/404.png": "/static/media/404.2b0a61c94258663106bb.png",
+    "static/media/imgopeadorlogistico.png": "/static/media/imgopeadorlogistico.eda405e1a7cb8d7f714b.png",
+    "static/media/imgcatador.png": "/static/media/imgcatador.8bad0a8ad2a92e0dd76c.png",
+    "static/media/imgassociacao.png": "/static/media/imgassociacao.6d306a649284f5f0ac7a.png",
+    "static/media/imgadmin.png": "/static/media/imgadmin.a7b50198e9aab479a7b5.png",
+    "static/media/reciclo-logo.png": "/static/media/reciclo-logo.0857705499dcbba439d8.png",
+    "index.html": "/index.html",
+    "main.39fc6a9f.css.map": "/static/css/main.39fc6a9f.css.map",
+    "main.d1d5a827.js.map": "/static/js/main.d1d5a827.js.map"
   },
   "entrypoints": [
-    "static/css/main.d4480f12.css",
-    "static/js/main.53582d1f.js"
+    "static/css/main.39fc6a9f.css",
+    "static/js/main.d1d5a827.js"
   ]
 }
