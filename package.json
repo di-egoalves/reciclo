@@ -1,7 +1,7 @@
 {
   "name": "reciclo-front",
   "version": "0.1.0",
-  "homepage": "https://di-egoalves.github.io/",
+  "homepage": "https://di-egoalves.github.io",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
